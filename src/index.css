@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Reset */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+/* Optional global font (Apple-like) */
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: #f9fafb; /* Tailwind gray-50 */
+}
