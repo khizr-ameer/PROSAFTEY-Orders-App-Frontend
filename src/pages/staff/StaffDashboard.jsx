@@ -1,4 +1,4 @@
-import OwnerLayout from "../../layouts/OwnerLayout";
+import StaffLayout from "../../layouts/StaffLayout";
 
 export default function Dashboard() {
   const cards = [
@@ -8,7 +8,7 @@ export default function Dashboard() {
   ];
 
   return (
-    <OwnerLayout>
+    <StaffLayout>
       <div className="min-h-screen pb-10">
         {/* Premium gradient background */}
         <div className="bg-gradient-to-r from-indigo-50 via-white to-pink-50 rounded-3xl p-8 mb-8 shadow-inner">
@@ -31,6 +31,6 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-    </OwnerLayout>
+    </StaffLayout>
   );
 }

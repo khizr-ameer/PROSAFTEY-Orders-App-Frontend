@@ -47,8 +47,9 @@ function App() {
         {/* Staff-only routes */}
         <Route element={<PrivateRoute roleRequired="STAFF" />}>
           <Route path="/staff/dashboard" element={<StaffDashboard />} />
+          <Route path="/staff/clients" element={<Clients />} />
         </Route>
-
+         
         {/* Authenticated routes (Owner + Staff) */}
         <Route element={<PrivateRoute />}>
           <Route path="/profile" element={<Profile />} />
