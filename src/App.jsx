@@ -20,6 +20,10 @@ import CreateStaff from "./pages/owner/CreateStaff";
 
 // Staff pages
 import StaffDashboard from "./pages/staff/StaffDashboard";
+import StaffClients from "./pages/staff/StaffClients";
+import StaffClientDetail from "./pages/staff/StaffClientDetail";
+import StaffSampleOrders from "./pages/staff/StaffSampleOrders";
+import StaffPurchaseOrders from "./pages/staff/StaffPurchaseOrders";
 
 function App() {
   return (
@@ -47,7 +51,12 @@ function App() {
         {/* Staff-only routes */}
         <Route element={<PrivateRoute roleRequired="STAFF" />}>
           <Route path="/staff/dashboard" element={<StaffDashboard />} />
-          <Route path="/staff/clients" element={<Clients />} />
+          <Route path="/staff/clients" element={<StaffClients />} />
+          <Route path="/staff/clients/:clientId" element={<StaffClientDetail />} />
+          <Route path="/staff/clients/:clientId/sample-orders" element={<StaffSampleOrders />} />
+          <Route path="/staff/clients/:clientId/purchase-orders" element={<StaffPurchaseOrders />} />
+
+
         </Route>
          
         {/* Authenticated routes (Owner + Staff) */}
