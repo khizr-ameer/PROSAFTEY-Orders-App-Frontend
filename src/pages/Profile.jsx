@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import OwnerLayout from "../layouts/OwnerLayout";
+import StaffLayout from "../layouts/StaffLayout";
 import { LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/axios";
@@ -19,10 +20,24 @@ export default function Profile() {
   const [loadingUser, setLoadingUser] = useState(true);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
-  // Fetch logged-in user info
-  useEffect(() => {
-    const token = localStorage.getItem("token");
+  // =========================
+  // Get role DIRECTLY from token (for layout)
+  // =========================
+  const token = localStorage.getItem("token");
 
+  let roleFromToken = "";
+  if (token) {
+    try {
+      roleFromToken = jwtDecode(token)?.role || "";
+    } catch {
+      roleFromToken = "";
+    }
+  }
+
+  // =========================
+  // Fetch logged-in user info
+  // =========================
+  useEffect(() => {
     if (!token) {
       setLoadingUser(false);
       return;
@@ -55,7 +70,7 @@ export default function Profile() {
     };
 
     fetchUser();
-  }, [navigate]);
+  }, [navigate, token]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -94,8 +109,14 @@ export default function Profile() {
     return <div className="p-4">Loading user info...</div>;
   }
 
+  // =========================
+  // Choose Layout based on TOKEN role (FIX)
+  // =========================
+  const LayoutWrapper =
+    roleFromToken === "OWNER" ? OwnerLayout : StaffLayout;
+
   return (
-    <OwnerLayout>
+    <LayoutWrapper>
       <div className="max-w-2xl mx-auto space-y-8">
         <h1 className="text-3xl font-semibold">My Profile</h1>
 
@@ -194,6 +215,6 @@ export default function Profile() {
           </div>
         </div>
       )}
-    </OwnerLayout>
+    </LayoutWrapper>
   );
 }
