@@ -284,7 +284,7 @@ const downloadCSV = async () => {
                   <p className="text-sm text-gray-500">Invoice</p>
                   <button
                     onClick={() => openFile(poData.invoiceFile)}
-                    className="text-blue-600 hover:underline"
+                    className="px-4 py-2 rounded-xl border text-sm hover:bg-gray-200"
                   >
                     View Invoice
                   </button>
@@ -292,7 +292,7 @@ const downloadCSV = async () => {
               )}
               <button
                 onClick={downloadCSV}
-                className="inline-block px-6 py-2 rounded-xl bg-black font-semibold text-white hover:bg-gray-900 transition"
+                 className="px-4 py-2 rounded-xl border text-medium font-bold text-black hover:bg-gray-200"
               >
                 Download PO
               </button>
