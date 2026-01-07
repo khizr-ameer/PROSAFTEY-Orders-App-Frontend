@@ -249,7 +249,7 @@ export default function SampleOrderDetail() {
 
           <div className="space-y-4">
             <div>
-              <p className="text-sm text-gray-500 mb-2">Please add Graphic File image</p>
+              <p className="text-sm text-gray-500 mb-2">Graphic File image</p>
               {isEditing ? (
                 <input type="file" name="graphicFile" onChange={handleChange} />
               ) : (
@@ -258,7 +258,7 @@ export default function SampleOrderDetail() {
             </div>
 
             <div>
-              <p className="text-sm text-gray-500 mb-2">Please add Pattern File image</p>
+              <p className="text-sm text-gray-500 mb-2">Pattern File image</p>
               {isEditing ? (
                 <input type="file" name="patternFile" onChange={handleChange} />
               ) : (
@@ -267,7 +267,7 @@ export default function SampleOrderDetail() {
             </div>
 
             <div>
-              <p className="text-sm text-gray-500 mb-2">Please add Tech Pack Document</p>
+              <p className="text-sm text-gray-500 mb-2">Tech Pack Document</p>
               {isEditing ? (
                 <input type="file" name="techPackFile" onChange={handleChange} />
               ) : (
