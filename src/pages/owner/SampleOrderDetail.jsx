@@ -33,12 +33,11 @@ export default function SampleOrderDetail() {
   }, [sampleId]);
 
   // ====================
-  // Handle Input / File Changes
+  // Handle Input Changes
   // ====================
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (files) {
-      // Replace file with the new one
       setForm((prev) => ({ ...prev, [name]: files[0] }));
     } else {
       setForm((prev) => ({ ...prev, [name]: value }));
@@ -46,20 +45,12 @@ export default function SampleOrderDetail() {
   };
 
   // ====================
-  // Save / Update
+  // Save
   // ====================
   const handleSave = async () => {
     try {
       const data = new FormData();
-
-      Object.keys(form).forEach((key) => {
-        if (form[key] instanceof File) {
-          // Only send new file if user changed it
-          data.append(key, form[key]);
-        } else {
-          data.append(key, form[key]);
-        }
-      });
+      Object.keys(form).forEach((key) => data.append(key, form[key]));
 
       const res = await axios.put(`/samples/${sampleId}`, data, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -67,77 +58,56 @@ export default function SampleOrderDetail() {
 
       setOrder(res.data);
       setForm(res.data);
-      setCacheBuster(Date.now()); // Force image reload
+      setCacheBuster(Date.now());
       setIsEditing(false);
       alert("Sample order updated successfully!");
     } catch (err) {
-      console.error(err);
-      alert(err.response?.data?.message || "Failed to update sample order");
+      alert("Failed to update sample order");
     }
   };
 
-  if (loading) return <div className="p-4">Loading sample order...</div>;
-  if (!order) return <div className="p-4">Sample order not found</div>;
+  if (loading) return <div className="p-6">Loading sample order...</div>;
+  if (!order) return <div className="p-6">Sample order not found</div>;
 
   // ====================
-  // File Preview Component
+  // File Preview
   // ====================
   const renderFilePreview = (file) => {
     if (!file) return <span className="text-gray-400">No file</span>;
 
-    // Show selected file instantly while editing
-    if (isEditing && file instanceof File) {
-      const tempUrl = URL.createObjectURL(file);
-      return (
-        <div className="relative flex items-center gap-4">
-          <img
-            src={tempUrl}
-            alt="Preview"
-            className="w-32 h-32 object-cover rounded-lg border"
-          />
-          <a
-            href={tempUrl}
-            download={file.name}
-            className="ml-auto text-blue-600 hover:underline"
-          >
-            Download
-          </a>
-        </div>
-      );
-    }
-
     const ext = file.split(".").pop().toLowerCase();
-    const isImage = ["jpg", "jpeg", "png", "gif", "webp"].includes(ext);
+    const isImage = ["jpg", "jpeg", "png", "webp"].includes(ext);
     const isPDF = ext === "pdf";
-    const isWord = ext === "doc" || ext === "docx";
-
     const fileUrl = `${BASE_URL}/${file}?v=${cacheBuster}`;
 
     return (
-      <div className="relative flex items-center gap-4 mb-2">
+      <div className="flex items-center gap-4">
         {isImage && (
-          <img
-            src={fileUrl}
-            className="w-32 h-32 object-cover rounded-lg border cursor-pointer"
+          <div
             onClick={() => window.open(fileUrl, "_blank")}
-            alt="Preview"
-          />
+            className="w-28 h-28 border border-dashed rounded-xl overflow-hidden cursor-pointer bg-gray-50"
+          >
+            <img
+              src={fileUrl}
+              alt="preview"
+              className="w-full h-full object-cover"
+            />
+          </div>
         )}
+
         {isPDF && (
-          <iframe
-            src={fileUrl}
-            title="PDF Preview"
-            className="w-64 h-48 border rounded-lg"
-          />
+          <button
+            onClick={() => window.open(fileUrl, "_blank")}
+            className="px-4 py-2 rounded-xl border text-sm hover:bg-gray-50"
+          >
+            View PDF
+          </button>
         )}
-        {isWord && <span className="text-gray-700">{file.split("/").pop()}</span>}
 
         <a
           href={fileUrl}
           download
-          target="_blank"
-          rel="noopener noreferrer"
-          className="ml-auto text-blue-600 hover:underline"
+          className="ml-auto text-blue-600 hover:underline text-sm"
         >
           Download
         </a>
@@ -146,171 +116,178 @@ export default function SampleOrderDetail() {
   };
 
   // ====================
-  // Render UI
+  // UI
   // ====================
   return (
     <OwnerLayout>
-      <div className="max-w-4xl mx-auto space-y-8">
+      <div className="max-w-5xl mx-auto space-y-8">
         {/* Header */}
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl sm:text-4xl font-semibold">
-            Sample Order Details
+          <h1 className="text-3xl font-semibold">
+            Sample Order: {order.sampleName}
           </h1>
+
           <button
             onClick={() => setIsEditing(!isEditing)}
-            className="px-6 py-3 bg-black text-white rounded-xl hover:bg-gray-900 transition"
+            className="px-6 py-2 rounded-xl bg-black font-semibold text-white hover:bg-gray-900 transition"
           >
             {isEditing ? "Cancel" : "Edit"}
           </button>
         </div>
 
-        <div className="bg-white p-8 rounded-3xl shadow-lg space-y-6">
+        {/* Basic Info Card */}
+        <div className="bg-white rounded-3xl p-8 shadow-md grid sm:grid-cols-2 gap-6">
           {/* Sample Name */}
-          <div className="flex flex-col sm:flex-row sm:space-x-6 items-start sm:items-center">
-            <span className="font-medium w-40">Sample Name:</span>
+          <div>
+            <p className="text-sm text-gray-500">Sample Name</p>
             {isEditing ? (
               <input
-                type="text"
                 name="sampleName"
                 value={form.sampleName}
                 onChange={handleChange}
-                className="flex-1 border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:border-black"
+                className="w-full border rounded-xl px-4 py-2"
               />
             ) : (
-              <span className="text-gray-700">{order.sampleName}</span>
+              <p className="text-lg font-medium">{order.sampleName}</p>
             )}
           </div>
 
-          {/* Fabric Details */}
-          <div className="flex flex-col sm:flex-row sm:space-x-6 items-start sm:items-center">
-            <span className="font-medium w-40">Fabric Details:</span>
+          {/* Tracking */}
+          <div>
+            <p className="text-sm text-gray-500">Tracking Number</p>
             {isEditing ? (
-              <textarea
-                name="fabricDetails"
-                value={form.fabricDetails}
+              <input
+                name="trackingNumber"
+                value={form.trackingNumber}
                 onChange={handleChange}
-                rows={3}
-                className="flex-1 border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:border-black resize-none"
+                className="w-full border rounded-xl px-4 py-2"
               />
             ) : (
-              <span className="text-gray-700">{order.fabricDetails}</span>
+              <p className="text-lg font-medium">{order.trackingNumber}</p>
             )}
           </div>
 
-          {/* Graphic File */}
-          <div className="flex flex-col sm:flex-row sm:space-x-6 items-start sm:items-center">
-            <span className="font-medium w-40">Graphic File:</span>
+          {/* Status */}
+          <div>
+            <p className="text-sm text-gray-500">Order Status</p>
             {isEditing ? (
-              <input type="file" name="graphicFile" onChange={handleChange} />
+              <select
+                name="status"
+                value={form.status}
+                onChange={handleChange}
+                className="w-full border rounded-xl px-4 py-2"
+              >
+                {[
+                  "Tech Pack Received",
+                  "Cutting",
+                  "Production",
+                  "Quality Control",
+                  "Completed",
+                ].map((s) => (
+                  <option key={s}>{s}</option>
+                ))}
+              </select>
             ) : (
-              renderFilePreview(order.graphicFile)
+              <p className="text-lg font-medium">{order.status}</p>
             )}
           </div>
 
-          {/* Pattern File */}
-          <div className="flex flex-col sm:flex-row sm:space-x-6 items-start sm:items-center">
-            <span className="font-medium w-40">Pattern File:</span>
+          {/* Payment */}
+          <div>
+            <p className="text-sm text-gray-500">Payment Received</p>
             {isEditing ? (
-              <input type="file" name="patternFile" onChange={handleChange} />
+              <input
+                type="number"
+                name="paymentReceived"
+                value={form.paymentReceived}
+                onChange={handleChange}
+                className="w-full border rounded-xl px-4 py-2"
+              />
             ) : (
-              renderFilePreview(order.patternFile)
+              <p className="text-lg font-medium">{order.paymentReceived}%</p>
             )}
           </div>
 
-          {/* Tech Pack File */}
-          <div className="flex flex-col sm:flex-row sm:space-x-6 items-start sm:items-center">
-            <span className="font-medium w-40">Tech Pack:</span>
-            {isEditing ? (
-              <input type="file" name="techPackFile" onChange={handleChange} />
-            ) : (
-              renderFilePreview(order.techPackFile)
-            )}
-          </div>
-
-          {/* Production Due Date */}
-          <div className="flex flex-col sm:flex-row sm:space-x-6 items-start sm:items-center">
-            <span className="font-medium w-40">Production Due Date:</span>
+          {/* Due Date */}
+          <div>
+            <p className="text-sm text-gray-500">Production Due Date</p>
             {isEditing ? (
               <input
                 type="date"
                 name="productionDueDate"
                 value={form.productionDueDate?.split("T")[0]}
                 onChange={handleChange}
-                className="flex-1 border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:border-black"
+                className="w-full border rounded-xl px-4 py-2"
               />
             ) : (
-              <span className="text-gray-700">{order.productionDueDate?.split("T")[0]}</span>
+              <p className="text-lg font-medium">
+                {order.productionDueDate?.split("T")[0]}
+              </p>
             )}
           </div>
 
-          {/* Tracking Number */}
-          <div className="flex flex-col sm:flex-row sm:space-x-6 items-start sm:items-center">
-            <span className="font-medium w-40">Tracking Number:</span>
+          {/* Fabric */}
+          <div className="sm:col-span-2">
+            <p className="text-sm text-gray-500">Fabric Details</p>
             {isEditing ? (
-              <input
-                type="text"
-                name="trackingNumber"
-                value={form.trackingNumber}
+              <textarea
+                name="fabricDetails"
+                value={form.fabricDetails}
                 onChange={handleChange}
-                className="flex-1 border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:border-black"
+                rows={3}
+                className="w-full border rounded-xl px-4 py-2 resize-none"
               />
             ) : (
-              <span className="text-gray-700">{order.trackingNumber}</span>
+              <p className="text-lg font-medium">{order.fabricDetails}</p>
             )}
           </div>
-
-          {/* Status */}
-          <div className="flex flex-col sm:flex-row sm:space-x-6 items-start sm:items-center">
-            <span className="font-medium w-40">Order Status:</span>
-            {isEditing ? (
-              <select
-                name="status"
-                value={form.status}
-                onChange={handleChange}
-                className="flex-1 border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:border-black"
-              >
-                {["Tech Pack Received","Cutting","Production","Quality Control","Completed"].map((s) => (
-                  <option key={s}>{s}</option>
-                ))}
-              </select>
-            ) : (
-              <span className="text-gray-700">{order.status}</span>
-            )}
-          </div>
-
-          {/* Payment Received */}
-          <div className="flex flex-col sm:flex-row sm:space-x-6 items-start sm:items-center relative">
-            <span className="font-medium w-40">Payment Received:</span>
-            {isEditing ? (
-              <div className="relative flex-1">
-                <input
-                  type="number"
-                  min={0}
-                  max={100}
-                  name="paymentReceived"
-                  value={form.paymentReceived}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-xl px-4 py-2 pr-10 focus:outline-none focus:border-black"
-                />
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500">%</span>
-              </div>
-            ) : (
-              <span className="text-gray-700">{order.paymentReceived}%</span>
-            )}
-          </div>
-
-          {/* Save Button */}
-          {isEditing && (
-            <div className="flex justify-end">
-              <button
-                onClick={handleSave}
-                className="px-6 py-3 bg-black text-white rounded-xl hover:bg-gray-900 transition"
-              >
-                Save Changes
-              </button>
-            </div>
-          )}
         </div>
+
+        {/* Files */}
+        <div className="bg-white rounded-3xl p-8 shadow-md space-y-6">
+          <h2 className="text-xl font-semibold">Files</h2>
+
+          <div className="space-y-4">
+            <div>
+              <p className="text-sm text-gray-500 mb-2">Please add Graphic File image</p>
+              {isEditing ? (
+                <input type="file" name="graphicFile" onChange={handleChange} />
+              ) : (
+                renderFilePreview(order.graphicFile)
+              )}
+            </div>
+
+            <div>
+              <p className="text-sm text-gray-500 mb-2">Please add Pattern File image</p>
+              {isEditing ? (
+                <input type="file" name="patternFile" onChange={handleChange} />
+              ) : (
+                renderFilePreview(order.patternFile)
+              )}
+            </div>
+
+            <div>
+              <p className="text-sm text-gray-500 mb-2">Please add Tech Pack Document</p>
+              {isEditing ? (
+                <input type="file" name="techPackFile" onChange={handleChange} />
+              ) : (
+                renderFilePreview(order.techPackFile)
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Save */}
+        {isEditing && (
+          <div className="flex justify-end">
+            <button
+              onClick={handleSave}
+              className="px-6 py-3 rounded-xl bg-black text-white"
+            >
+              Save Changes
+            </button>
+          </div>
+        )}
       </div>
     </OwnerLayout>
   );
