@@ -98,7 +98,7 @@ export default function SampleOrderDetail() {
         {isPDF && (
           <button
             onClick={() => window.open(fileUrl, "_blank")}
-            className="px-4 py-2 rounded-xl border text-sm hover:bg-gray-50"
+            className="px-4 py-2 rounded-xl border text-sm hover:bg-gray-200"
           >
             View PDF
           </button>
