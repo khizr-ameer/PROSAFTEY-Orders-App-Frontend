@@ -53,8 +53,8 @@ export default function OwnerLayout({ children }) {
 
         <nav className="space-y-3 flex-1 overflow-y-auto mt-10">
           {navItem("/owner/dashboard", "Dashboard", LayoutDashboard)}
-          {navItem("/profile", "My Profile", User)}
           {navItem("/owner/clients", "Clients", Users)}
+          {navItem("/profile", "My Profile", User)}
           {navItem("/owner/staff", "Staff", Users)}
         </nav>
 
