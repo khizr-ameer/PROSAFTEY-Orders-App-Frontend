@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import OwnerLayout from "../../layouts/OwnerLayout";
-import { Trash2 } from "lucide-react";
+import { Trash2, Eye, EyeOff } from "lucide-react";
 import { useEffect, useState } from "react";
 import axios from "../../api/axios";
 
@@ -18,6 +18,7 @@ export default function Staff() {
     email: "",
     password: "",
   });
+  const [showCreatePassword, setShowCreatePassword] = useState(false);
 
   /* =============================
      RESET PASSWORD MODAL
@@ -28,6 +29,8 @@ export default function Staff() {
     newPassword: "",
     confirmPassword: "",
   });
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   /* =============================
      DELETE CONFIRMATION MODAL
@@ -64,6 +67,7 @@ export default function Staff() {
       alert("Staff created successfully");
       setShowCreateModal(false);
       setCreateForm({ email: "", password: "" });
+      setShowCreatePassword(false);
       fetchStaff();
     } catch (err) {
       console.error(err);
@@ -77,6 +81,8 @@ export default function Staff() {
   const openResetModal = (member) => {
     setSelectedStaff(member);
     setPasswordForm({ newPassword: "", confirmPassword: "" });
+    setShowNewPassword(false);
+    setShowConfirmPassword(false);
     setShowResetModal(true);
   };
 
@@ -193,16 +199,30 @@ export default function Staff() {
                 className="w-full border border-gray-300 rounded-xl px-4 py-3"
               />
 
-              <input
-                type="password"
-                placeholder="Temporary Password"
-                value={createForm.password}
-                onChange={(e) =>
-                  setCreateForm({ ...createForm, password: e.target.value })
-                }
-                required
-                className="w-full border border-gray-300 rounded-xl px-4 py-3"
-              />
+              {/* Password with Eye */}
+              <div className="relative">
+                <input
+                  type={showCreatePassword ? "text" : "password"}
+                  placeholder="Temporary Password"
+                  value={createForm.password}
+                  onChange={(e) =>
+                    setCreateForm({ ...createForm, password: e.target.value })
+                  }
+                  required
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 pr-12"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowCreatePassword(!showCreatePassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                >
+                  {showCreatePassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
+                </button>
+              </div>
 
               <div className="flex justify-end space-x-3 pt-4">
                 <button
@@ -233,30 +253,55 @@ export default function Staff() {
             </h2>
 
             <form onSubmit={handleResetPassword} className="space-y-4">
-              <input
-                type="password"
-                placeholder="New Password"
-                value={passwordForm.newPassword}
-                onChange={(e) =>
-                  setPasswordForm({ ...passwordForm, newPassword: e.target.value })
-                }
-                required
-                className="w-full border border-gray-300 rounded-xl px-4 py-3"
-              />
+              {/* New Password */}
+              <div className="relative">
+                <input
+                  type={showNewPassword ? "text" : "password"}
+                  placeholder="New Password"
+                  value={passwordForm.newPassword}
+                  onChange={(e) =>
+                    setPasswordForm({
+                      ...passwordForm,
+                      newPassword: e.target.value,
+                    })
+                  }
+                  required
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 pr-12"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                >
+                  {showNewPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
 
-              <input
-                type="password"
-                placeholder="Confirm Password"
-                value={passwordForm.confirmPassword}
-                onChange={(e) =>
-                  setPasswordForm({
-                    ...passwordForm,
-                    confirmPassword: e.target.value,
-                  })
-                }
-                required
-                className="w-full border border-gray-300 rounded-xl px-4 py-3"
-              />
+              {/* Confirm Password */}
+              <div className="relative">
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="Confirm Password"
+                  value={passwordForm.confirmPassword}
+                  onChange={(e) =>
+                    setPasswordForm({
+                      ...passwordForm,
+                      confirmPassword: e.target.value,
+                    })
+                  }
+                  required
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 pr-12"
+                />
+                <button
+                  type="button"
+                  onClick={() =>
+                    setShowConfirmPassword(!showConfirmPassword)
+                  }
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                >
+                  {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
 
               <div className="flex justify-end space-x-3 pt-4">
                 <button
