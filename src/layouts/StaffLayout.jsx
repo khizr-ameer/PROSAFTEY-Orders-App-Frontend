@@ -51,8 +51,8 @@ export default function StaffLayout({ children }) {
 
         <nav className="space-y-3 flex-1 overflow-y-auto mt-10">
           {navItem("/staff/dashboard", "Dashboard", LayoutDashboard)}
-          {navItem("/profile", "My Profile", User)}
           {navItem("/staff/clients", "Clients", Users)}
+          {navItem("/profile", "My Profile", User)}
           {/* Staff-only, removed Staff nav */}
         </nav>
 

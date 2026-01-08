@@ -16,12 +16,6 @@ export default function SampleOrders() {
     sampleId: null,
   });
 
-  // Preload images to speed up future load
-  const preloadImage = (url) => {
-    const img = new Image();
-    img.src = url;
-  };
-
   // Fetch client info + samples
   useEffect(() => {
     const fetchData = async () => {
@@ -31,13 +25,6 @@ export default function SampleOrders() {
 
         const sampleRes = await axios.get(`/samples/client/${clientId}`);
         setSamples(sampleRes.data || []);
-
-        // Preload images
-        sampleRes.data.forEach((s) => {
-          if (s.graphicFile) {
-            preloadImage(`http://localhost:5000/${s.graphicFile}`);
-          }
-        });
       } catch (err) {
         console.error("Error fetching samples or client info", err);
       } finally {
@@ -101,14 +88,12 @@ export default function SampleOrders() {
                     src={`http://localhost:5000/${sample.graphicFile}`}
                     alt={sample.sampleName}
                     className="w-12 h-12 rounded-xl object-cover border"
-                    loading="lazy"
-                    onClick={(e) => {
-                      e.stopPropagation();
+                    onClick={() =>
                       window.open(
                         `http://localhost:5000/${sample.graphicFile}`,
                         "_blank"
-                      );
-                    }}
+                      )
+                    }
                   />
                 ) : (
                   <div className="w-12 h-12 rounded-xl bg-gray-200 flex items-center justify-center text-xs text-gray-500">
