@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import OwnerLayout from "../layouts/OwnerLayout";
 import StaffLayout from "../layouts/StaffLayout";
-import { LogOut } from "lucide-react";
+import { LogOut, Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/axios";
 import { jwtDecode } from "jwt-decode";
@@ -15,6 +15,10 @@ export default function Profile() {
     newPassword: "",
     confirmPassword: "",
   });
+
+  const [showOld, setShowOld] = useState(false);
+  const [showNew, setShowNew] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [loadingUser, setLoadingUser] = useState(true);
@@ -110,7 +114,7 @@ export default function Profile() {
   }
 
   // =========================
-  // Choose Layout based on TOKEN role (FIX)
+  // Choose Layout based on TOKEN role
   // =========================
   const LayoutWrapper =
     roleFromToken === "OWNER" ? OwnerLayout : StaffLayout;
@@ -140,35 +144,65 @@ export default function Profile() {
         >
           <h2 className="text-xl font-semibold">Change Password</h2>
 
-          <input
-            type="password"
-            name="oldPassword"
-            value={form.oldPassword}
-            onChange={handleChange}
-            placeholder="Old Password"
-            required
-            className="w-full border rounded-xl px-4 py-3"
-          />
+          {/* Old Password */}
+          <div className="relative">
+            <input
+              type={showOld ? "text" : "password"}
+              name="oldPassword"
+              value={form.oldPassword}
+              onChange={handleChange}
+              placeholder="Old Password"
+              required
+              className="w-full border rounded-xl px-4 py-3 pr-12"
+            />
+            <button
+              type="button"
+              onClick={() => setShowOld(!showOld)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500"
+            >
+              {showOld ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
+          </div>
 
-          <input
-            type="password"
-            name="newPassword"
-            value={form.newPassword}
-            onChange={handleChange}
-            placeholder="New Password"
-            required
-            className="w-full border rounded-xl px-4 py-3"
-          />
+          {/* New Password */}
+          <div className="relative">
+            <input
+              type={showNew ? "text" : "password"}
+              name="newPassword"
+              value={form.newPassword}
+              onChange={handleChange}
+              placeholder="New Password"
+              required
+              className="w-full border rounded-xl px-4 py-3 pr-12"
+            />
+            <button
+              type="button"
+              onClick={() => setShowNew(!showNew)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500"
+            >
+              {showNew ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
+          </div>
 
-          <input
-            type="password"
-            name="confirmPassword"
-            value={form.confirmPassword}
-            onChange={handleChange}
-            placeholder="Confirm New Password"
-            required
-            className="w-full border rounded-xl px-4 py-3"
-          />
+          {/* Confirm Password */}
+          <div className="relative">
+            <input
+              type={showConfirm ? "text" : "password"}
+              name="confirmPassword"
+              value={form.confirmPassword}
+              onChange={handleChange}
+              placeholder="Confirm New Password"
+              required
+              className="w-full border rounded-xl px-4 py-3 pr-12"
+            />
+            <button
+              type="button"
+              onClick={() => setShowConfirm(!showConfirm)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500"
+            >
+              {showConfirm ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
+          </div>
 
           <button
             type="submit"

@@ -12,7 +12,7 @@ export default function Dashboard() {
     const fetchDashboard = async () => {
       setLoading(true);
       try {
-        const res = await axios.get("/dashboard/owner"); // Same API
+        const res = await axios.get("/dashboard/owner"); // Call API
         const data = res.data;
 
         setStats([
