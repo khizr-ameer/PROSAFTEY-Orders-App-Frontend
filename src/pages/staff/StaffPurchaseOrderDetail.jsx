@@ -75,6 +75,7 @@ export default function StaffPurchaseOrderDetail({ user }) {
           <p className="text-gray-500 mt-1">
             Tracking: {poData.trackingNumber || "—"}
           </p>
+          
         </div>
 
         {/* ================= BASIC INFO ================= */}
@@ -86,6 +87,23 @@ export default function StaffPurchaseOrderDetail({ user }) {
           <div>
             <p className="text-sm text-gray-500">Tracking Number</p>
             <p className="text-lg font-medium">{poData.trackingNumber || "—"}</p>
+          </div>
+           <div>
+            <p className="text-sm text-gray-500">Priority</p>
+            <span
+              className={`inline-block px-3 py-1 rounded-full text-sm font-semibold
+                ${
+                  poData.priority === "URGENT"
+                    ? "bg-red-100 text-red-700"
+                    : poData.priority === "HIGH"
+                    ? "bg-orange-100 text-orange-700"
+                    : poData.priority === "MEDIUM"
+                    ? "bg-yellow-100 text-yellow-700"
+                    : "bg-gray-100 text-gray-700"
+                }`}
+            >
+              {poData.priority || "LOW"}
+            </span>
           </div>
         </div>
 
@@ -174,6 +192,14 @@ export default function StaffPurchaseOrderDetail({ user }) {
                 </div>
               </div>
 
+              {/* Product Description */}
+              {product.productDescription && (
+                <div>
+                  <p className="text-sm text-gray-500 mb-1">Product Description</p>
+                  <p className="text-gray-700">{product.productDescription}</p>
+                </div>
+              )}
+
               {/* Sizes */}
               <div>
                 <p className="text-sm text-gray-500 mb-2">Size Breakdown</p>
@@ -195,7 +221,7 @@ export default function StaffPurchaseOrderDetail({ user }) {
           ))}
         </div>
 
-        {/* ================= INVOICE FILE ================= */}
+        {/* ================= INVOICE FILE =================
         {poData.invoiceFile && (
           <div className="bg-white rounded-3xl p-6 shadow-md">
             <p className="text-sm text-gray-500">Invoice</p>
@@ -206,7 +232,7 @@ export default function StaffPurchaseOrderDetail({ user }) {
               View Invoice
             </button>
           </div>
-        )}
+        )} */}
       </div>
     </StaffLayout>
   );

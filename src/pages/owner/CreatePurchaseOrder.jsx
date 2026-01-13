@@ -12,11 +12,13 @@ export default function CreatePurchaseOrder() {
   const [status, setStatus] = useState("Tech Pack Received");
   const [paymentReceived, setPaymentReceived] = useState();
   const [invoiceFile, setInvoiceFile] = useState(null);
+  const [priority, setPriority] = useState("LOW"); // ✅ NEW: priority
   const [loading, setLoading] = useState(false);
 
   const [products, setProducts] = useState([
     {
       productName: "",
+      productDescription: "", // ✅ NEW: description
       sizes: [{ sizeName: "", quantity: 0 }],
       quantity: 0,
       productImage: null,
@@ -69,6 +71,7 @@ export default function CreatePurchaseOrder() {
       ...products,
       {
         productName: "",
+        productDescription: "", // ✅ NEW
         sizes: [{ sizeName: "", quantity: 0 }],
         quantity: 0,
         productImage: null,
@@ -107,6 +110,7 @@ export default function CreatePurchaseOrder() {
       formData.append("trackingNumber", trackingNumber.trim());
       formData.append("status", status);
       formData.append("paymentReceived", Number(paymentReceived));
+      formData.append("priority", priority); // ✅ NEW: priority
 
       // Invoice
       if (invoiceFile) {
@@ -120,7 +124,7 @@ export default function CreatePurchaseOrder() {
         }
       });
 
-      // Products JSON (WITHOUT productImage)
+      // Products JSON (WITH productDescription)
       formData.append(
         "products",
         JSON.stringify(
@@ -155,7 +159,7 @@ export default function CreatePurchaseOrder() {
 
         <form className="space-y-10" onSubmit={handleSubmit}>
           {/* Basic Info */}
-          <div className="grid sm:grid-cols-2 gap-6">
+          <div className="grid sm:grid-cols-3 gap-6">
             <input
               type="text"
               value={poNumber}
@@ -172,6 +176,21 @@ export default function CreatePurchaseOrder() {
               placeholder="Tracking Number"
               className="w-full border border-gray-300 rounded-xl px-4 py-3"
             />
+
+            {/* ✅ Priority */}
+           <div>
+            <p className="text-sm text-gray-500">Set Priority</p>
+            <select
+              value={priority}
+              onChange={(e) => setPriority(e.target.value)}
+              className="w-full border border-gray-300 rounded-xl px-4 py-3"
+            >
+              <option value="LOW">LOW</option>
+              <option value="MEDIUM">MEDIUM</option>
+              <option value="HIGH">HIGH</option>
+              <option value="URGENT">URGENT</option>
+            </select>
+            </div>
           </div>
 
           {/* Status + Payment */}
@@ -199,11 +218,13 @@ export default function CreatePurchaseOrder() {
           </div>
 
           {/* Invoice */}
+          <div>
+            <p className="text-sm text-gray-500">Add Invoice</p>
           <input
             type="file"
             onChange={(e) => setInvoiceFile(e.target.files[0])}
           />
-
+          </div>
           {/* Products */}
           <div className="space-y-10">
             {products.map((product, pIndex) => (
@@ -239,6 +260,21 @@ export default function CreatePurchaseOrder() {
                   placeholder="Product Name"
                   required
                   className="w-full border rounded-xl px-4 py-3"
+                />
+
+                {/* ✅ Product Description */}
+                <textarea
+                  value={product.productDescription}
+                  onChange={(e) =>
+                    handleProductChange(
+                      pIndex,
+                      "productDescription",
+                      e.target.value
+                    )
+                  }
+                  placeholder="Product Description"
+                  className="w-full border rounded-xl px-4 py-3 resize-none"
+                  rows={3}
                 />
 
                 {/* Sizes */}

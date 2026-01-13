@@ -61,44 +61,44 @@ export default function PurchaseOrderDetail() {
     setPoData({ ...poData, newInvoice: file[0] });
   };
 
+  const handlePriorityChange = (value) => {
+    setPoData({ ...poData, priority: value });
+  };
 
-// =========================
-// Download Purchase Order as Excel
-// =========================
-const downloadCSV = async () => {
-  try {
-    const token = localStorage.getItem("token"); // JWT token
+  // =========================
+  // Download Purchase Order as Excel
+  // =========================
+  const downloadCSV = async () => {
+    try {
+      const token = localStorage.getItem("token"); // JWT token
 
-    const res = await axios.get(
-      `/purchase-orders/${purchaseId}/download-csv`,
-      {
-        responseType: "blob", // ensures binary file download
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+      const res = await axios.get(
+        `/purchase-orders/${purchaseId}/download-csv`,
+        {
+          responseType: "blob", // ensures binary file download
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-    // Create a Blob URL and trigger download
-    const url = window.URL.createObjectURL(new Blob([res.data]));
-    const link = document.createElement("a");
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute(
+        "download",
+        `${poData.poNumber.replace(/ /g, "_")}.xlsx`
+      );
 
-    // File name with .xlsx extension
-    link.href = url;
-    link.setAttribute("download", `${poData.poNumber.replace(/ /g, "_")}.xlsx`);
-
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-
-    // Optional: revoke URL after download to free memory
-    window.URL.revokeObjectURL(url);
-  } catch (err) {
-    console.error("Failed to download PO Excel:", err);
-    alert(err.response?.data?.message || "Failed to download purchase order");
-  }
-};
-
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Failed to download PO Excel:", err);
+      alert(err.response?.data?.message || "Failed to download purchase order");
+    }
+  };
 
   // =========================
   // Save Updated Purchase Order
@@ -112,6 +112,7 @@ const downloadCSV = async () => {
       formData.append("trackingNumber", poData.trackingNumber);
       formData.append("status", poData.status);
       formData.append("paymentReceived", Number(poData.paymentReceived));
+      formData.append("priority", poData.priority); // ✅ Add priority
 
       // Invoice file
       if (poData.newInvoice) {
@@ -129,6 +130,7 @@ const downloadCSV = async () => {
 
         return {
           productName: product.productName,
+          productDescription: product.productDescription || "", // ✅ Include description
           sizes,
         };
       });
@@ -148,14 +150,13 @@ const downloadCSV = async () => {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      // Update frontend state
       const updatedProducts = res.data.products.map((p) => ({
         ...p,
         sizes: p.sizes.reduce((acc, s) => {
           acc[s.sizeName] = s.quantity;
           return acc;
         }, {}),
-        newImage: null, // reset new image
+        newImage: null,
       }));
 
       setPoData({ ...res.data, products: updatedProducts, newInvoice: null });
@@ -260,6 +261,21 @@ const downloadCSV = async () => {
                   onChange={(e) => handleInvoiceChange(e.target.files)}
                 />
               </div>
+
+              {/* ✅ Priority */}
+              <div>
+                <p className="text-sm text-gray-500">Edit Priority</p>
+              <select
+                value={poData.priority || "LOW"}
+                onChange={(e) => handlePriorityChange(e.target.value)}
+                className="w-full border border-gray-300 rounded-xl px-4 py-3 mt-2"
+              >
+                <option value="LOW">LOW</option>
+                <option value="MEDIUM">MEDIUM</option>
+                <option value="HIGH">HIGH</option>
+                <option value="URGENT">URGENT</option>  
+              </select>
+              </div>
             </>
           ) : (
             <>
@@ -290,9 +306,29 @@ const downloadCSV = async () => {
                   </button>
                 </div>
               )}
+
+              {/* ✅ Priority */}
+              <div>
+                <p className="text-sm text-gray-500">Priority</p>
+                <span
+                  className={`inline-block px-3 py-1 rounded-full text-sm font-semibold
+                  ${
+                    poData.priority === "URGENT"
+                      ? "bg-red-100 text-red-700"
+                      : poData.priority === "HIGH"
+                      ? "bg-orange-100 text-orange-700"
+                      : poData.priority === "MEDIUM"
+                      ? "bg-yellow-100 text-yellow-700"
+                      : "bg-gray-100 text-gray-700"
+                  }`}
+                >
+                  {poData.priority || "LOW"}
+                </span>
+              </div>
+
               <button
                 onClick={downloadCSV}
-                 className="px-4 py-2 rounded-xl border text-medium font-bold text-black hover:bg-gray-200"
+                className="px-4 py-2 rounded-xl border text-medium font-bold text-black hover:bg-gray-200"
               >
                 Download PO
               </button>
@@ -313,6 +349,26 @@ const downloadCSV = async () => {
                   Total:{" "}
                   {Object.values(product.sizes).reduce((a, b) => a + b, 0)}
                 </p>
+              </div>
+
+              {/* Product Description */}
+              <div>
+                {isEditing ? (
+                  <textarea
+                    value={product.productDescription || ""}
+                    onChange={(e) =>
+                      handleProductChange(
+                        index,
+                        "productDescription",
+                        e.target.value
+                      )
+                    }
+                    className="w-full border rounded-xl px-4 py-2 resize-none"
+                    rows={3}
+                  />
+                ) : (
+                  <p className="text-gray-700">{product.productDescription}</p>
+                )}
               </div>
 
               {/* Product Image */}
@@ -363,9 +419,25 @@ const downloadCSV = async () => {
                       key={size}
                       className="flex flex-col items-center bg-gray-50 rounded-xl p-2"
                     >
-                      <span className="text-xs font-medium text-gray-500">
-                        {size}
-                      </span>
+                      {isEditing ? (
+                        <input
+                          type="text"
+                          value={size}
+                          onChange={(e) => {
+                            const updatedSizes = { ...product.sizes };
+                            const valueQty = updatedSizes[size];
+                            delete updatedSizes[size];
+                            updatedSizes[e.target.value] = valueQty;
+                            handleProductChange(index, "sizes", updatedSizes);
+                          }}
+                          className="text-xs font-medium text-gray-500 w-full text-center border rounded-xl px-1 py-0.5 mb-1"
+                        />
+                      ) : (
+                        <span className="text-xs font-medium text-gray-500">
+                          {size}
+                        </span>
+                      )}
+
                       {isEditing ? (
                         <input
                           type="number"
