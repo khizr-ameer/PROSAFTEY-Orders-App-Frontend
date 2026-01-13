@@ -17,6 +17,7 @@ export default function CreateSampleOrder() {
     trackingNumber: "",
     status: "Tech Pack Received",
     paymentReceived: "",
+    priority: " ", // ✅ NEW
   });
 
   const [loading, setLoading] = useState(false);
@@ -46,6 +47,7 @@ export default function CreateSampleOrder() {
       data.append("productionDueDate", form.productionDueDate);
       data.append("trackingNumber", form.trackingNumber);
       data.append("status", form.status);
+      data.append("priority", form.priority); // ✅ NEW
       data.append("paymentReceived", form.paymentReceived || 0);
       data.append("clientId", clientId);
 
@@ -53,7 +55,7 @@ export default function CreateSampleOrder() {
       if (form.pattern) data.append("pattern", form.pattern);
       if (form.graphic) data.append("graphic", form.graphic);
 
-      const res = await axios.post("/samples", data, {
+      await axios.post("/samples", data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -94,32 +96,17 @@ export default function CreateSampleOrder() {
           <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
             <label className="flex-1">
               Tech Pack File
-              <input
-                type="file"
-                name="techPack"
-                onChange={handleChange}
-                className="mt-1 w-full"
-              />
+              <input type="file" name="techPack" onChange={handleChange} className="mt-1 w-full" />
             </label>
 
             <label className="flex-1">
               Pattern File
-              <input
-                type="file"
-                name="pattern"
-                onChange={handleChange}
-                className="mt-1 w-full"
-              />
+              <input type="file" name="pattern" onChange={handleChange} className="mt-1 w-full" />
             </label>
 
             <label className="flex-1">
               Graphic File
-              <input
-                type="file"
-                name="graphic"
-                onChange={handleChange}
-                className="mt-1 w-full"
-              />
+              <input type="file" name="graphic" onChange={handleChange} className="mt-1 w-full" />
             </label>
           </div>
 
@@ -145,6 +132,25 @@ export default function CreateSampleOrder() {
             placeholder="Tracking Number"
             className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-black"
           />
+
+          {/* ✅ PRIORITY SECTION (NEW) */}
+          <div className="space-y-1">
+            <label className="text-sm text-gray-600 block">Order Priority</label>
+            <p className="text-xs text-gray-400">
+              Set urgency level for this sample order
+            </p>
+            <select
+              name="priority"
+              value={form.priority}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-black"
+            >
+              <option value="LOW">Low</option>
+              <option value="MEDIUM">Medium</option>
+              <option value="HIGH">High</option>
+              <option value="URGENT">Urgent</option>
+            </select>
+          </div>
 
           <div className="space-y-1">
             <label className="text-sm text-gray-600 block">Order Status</label>

@@ -53,6 +53,16 @@ export default function StaffSampleOrderDetail() {
   };
 
   // ====================
+  // Priority Badge
+  // ====================
+  const priorityColors = {
+    LOW: "bg-green-100 text-green-700",
+    MEDIUM: "bg-yellow-100 text-yellow-700",
+    HIGH: "bg-orange-100 text-orange-700",
+    URGENT: "bg-red-100 text-red-700",
+  };
+
+  // ====================
   // File Preview (same UI)
   // ====================
   const renderFilePreview = (file) => {
@@ -125,6 +135,20 @@ export default function StaffSampleOrderDetail() {
             </p>
           </div>
 
+          {/* ✅ PRIORITY (READ ONLY) */}
+          <div>
+            <p className="text-sm text-gray-500">Priority</p>
+            {order.priority ? (
+              <span
+                className={`inline-block mt-1 px-4 py-1 rounded-full text-sm font-semibold ${priorityColors[order.priority]}`}
+              >
+                {order.priority}
+              </span>
+            ) : (
+              <span className="text-gray-400">—</span>
+            )}
+          </div>
+
           <div className="sm:col-span-2">
             <p className="text-sm text-gray-500">Fabric Details</p>
             <p className="text-lg font-medium">
@@ -169,9 +193,7 @@ export default function StaffSampleOrderDetail() {
           {/* ===== Status Audit Info ===== */}
           {order.statusUpdatedBy && (
             <div className="mt-6 p-4 rounded-2xl bg-gray-50 border space-y-1">
-              <p className="text-sm text-gray-500">
-                Last status update
-              </p>
+              <p className="text-sm text-gray-500">Last status update</p>
               <p className="text-sm">
                 <span className="font-medium">
                   {order.statusUpdatedBy.email}

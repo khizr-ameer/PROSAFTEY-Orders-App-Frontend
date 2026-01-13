@@ -192,6 +192,39 @@ export default function SampleOrderDetail() {
             )}
           </div>
 
+          {/* 🔥 PRIORITY (NEW) */}
+          <div>
+            <p className="text-sm text-gray-500">Priority</p>
+            {isEditing ? (
+              <select
+                name="priority"
+                value={form.priority || "LOW"}
+                onChange={handleChange}
+                className="w-full border rounded-xl px-4 py-2"
+              >
+                <option value="LOW">LOW</option>
+                <option value="MEDIUM">MEDIUM</option>
+                <option value="HIGH">HIGH</option>
+                <option value="URGENT">URGENT</option>
+              </select>
+            ) : (
+              <span
+                className={`inline-block px-3 py-1 rounded-full text-sm font-semibold
+                  ${
+                    order.priority === "URGENT"
+                      ? "bg-red-100 text-red-700"
+                      : order.priority === "HIGH"
+                      ? "bg-orange-100 text-orange-700"
+                      : order.priority === "MEDIUM"
+                      ? "bg-yellow-100 text-yellow-700"
+                      : "bg-gray-100 text-gray-700"
+                  }`}
+              >
+                {order.priority || "LOW"}
+              </span>
+            )}
+          </div>
+
           {/* Payment */}
           <div>
             <p className="text-sm text-gray-500">Payment Received</p>
