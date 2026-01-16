@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { X, Calendar, Package, Users, TrendingUp, AlertTriangle } from "lucide-react";
+import { X, Calendar, Package, Users, TrendingUp, AlertTriangle, Search } from "lucide-react";
 import StaffLayout from "../../layouts/StaffLayout";
 import axios from "../../api/axios";
 
@@ -13,8 +13,16 @@ export default function Dashboard() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState(null);
   const [modalData, setModalData] = useState([]);
+  const [filteredModalData, setFilteredModalData] = useState([]);
   const [modalLoading, setModalLoading] = useState(false);
   const [showDueSoonAlert, setShowDueSoonAlert] = useState(true);
+
+  // Search & Filter state
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterStatus, setFilterStatus] = useState("");
+  const [filterPriority, setFilterPriority] = useState("");
+  const [filterClient, setFilterClient] = useState("");
+  const [allClients, setAllClients] = useState([]);
 
   useEffect(() => {
     const fetchDashboard = async () => {
@@ -45,11 +53,64 @@ export default function Dashboard() {
     fetchDashboard();
   }, []);
 
+  // Fetch all clients for filter dropdown
+  useEffect(() => {
+    const fetchClients = async () => {
+      try {
+        const res = await axios.get("/clients");
+        setAllClients(res.data);
+      } catch (err) {
+        console.error("Failed to fetch clients:", err);
+      }
+    };
+    fetchClients();
+  }, []);
+
+  // Apply filters whenever search/filter values change
+  useEffect(() => {
+    let filtered = [...modalData];
+
+    // Search filter
+    if (searchTerm) {
+      filtered = filtered.filter(item => {
+        const searchLower = searchTerm.toLowerCase();
+        return (
+          item.name?.toLowerCase().includes(searchLower) ||
+          item.sampleName?.toLowerCase().includes(searchLower) ||
+          item.poNumber?.toLowerCase().includes(searchLower) ||
+          item.clientId?.name?.toLowerCase().includes(searchLower) ||
+          item.company?.toLowerCase().includes(searchLower)
+        );
+      });
+    }
+
+    // Status filter
+    if (filterStatus) {
+      filtered = filtered.filter(item => item.status === filterStatus);
+    }
+
+    // Priority filter
+    if (filterPriority) {
+      filtered = filtered.filter(item => item.priority === filterPriority);
+    }
+
+    // Client filter
+    if (filterClient) {
+      filtered = filtered.filter(item => {
+        const clientId = item.clientId?._id || item.clientId || item._id;
+        return clientId === filterClient;
+      });
+    }
+
+    setFilteredModalData(filtered);
+  }, [searchTerm, filterStatus, filterPriority, filterClient, modalData]);
+
   const handleCardClick = async (type) => {
     setModalType(type);
     setModalOpen(true);
     setModalLoading(true);
     setModalData([]);
+    resetFilters();
 
     try {
       let res;
@@ -62,7 +123,6 @@ export default function Dashboard() {
             axios.get("/samples"),
             axios.get("/purchase-orders")
           ]);
-          // Filter only non-completed orders
           const activeSamples = samples.data.filter(s => s.status !== "Completed");
           const activePurchases = purchases.data.filter(p => p.status !== "Completed");
           res = { data: [...activeSamples, ...activePurchases] };
@@ -72,7 +132,6 @@ export default function Dashboard() {
             axios.get("/samples"),
             axios.get("/purchase-orders")
           ]);
-          // Filter only completed orders
           const filteredSamples = completedSamples.data.filter(s => s.status === "Completed");
           const filteredPurchases = completedPurchases.data.filter(p => p.status === "Completed");
           res = { data: [...filteredSamples, ...filteredPurchases] };
@@ -94,6 +153,7 @@ export default function Dashboard() {
     setModalOpen(true);
     setModalLoading(true);
     setModalData([]);
+    resetFilters();
 
     try {
       const [samples, purchases] = await Promise.all([
@@ -101,7 +161,6 @@ export default function Dashboard() {
         axios.get("/purchase-orders")
       ]);
       
-      // Filter by status
       const filteredSamples = samples.data.filter(s => s.status === status);
       const filteredPurchases = purchases.data.filter(p => p.status === status);
       
@@ -119,6 +178,7 @@ export default function Dashboard() {
     setModalOpen(true);
     setModalLoading(true);
     setModalData([]);
+    resetFilters();
 
     try {
       const res = await axios.get("/samples?dueSoon=true");
@@ -132,17 +192,27 @@ export default function Dashboard() {
   };
 
   const handleOrderClick = (order) => {
-    // Navigate to order details with client ID in path
     const orderType = order.sampleName ? "sample-orders" : "purchase-orders";
     const clientId = order.clientId?._id || order.clientId;
     window.location.href = `/staff/clients/${clientId}/${orderType}/${order._id}`;
+  };
+
+  const resetFilters = () => {
+    setSearchTerm("");
+    setFilterStatus("");
+    setFilterPriority("");
+    setFilterClient("");
   };
 
   const closeModal = () => {
     setModalOpen(false);
     setModalData([]);
     setModalType(null);
+    resetFilters();
   };
+
+  const isOrderModal = modalType && modalType !== "Clients";
+  const hasActiveFilters = searchTerm || filterStatus || filterPriority || filterClient;
 
   return (
     <StaffLayout>
@@ -280,7 +350,7 @@ export default function Dashboard() {
         {/* ================= MODAL ================= */}
         {modalOpen && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[80vh] overflow-hidden">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[85vh] overflow-hidden flex flex-col">
               {/* Modal Header */}
               <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white p-6 flex items-center justify-between">
                 <h2 className="text-2xl font-bold">{modalType}</h2>
@@ -292,17 +362,100 @@ export default function Dashboard() {
                 </button>
               </div>
 
+              {/* Search & Filters */}
+              {!modalLoading && (
+                <div className="p-4 bg-gray-50 border-b border-gray-200">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
+                    {/* Search */}
+                    <div className="lg:col-span-2 relative">
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                      <input
+                        type="text"
+                        placeholder={modalType === "Clients" ? "Search clients..." : "Search orders or clients..."}
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-400 focus:border-transparent text-sm"
+                      />
+                    </div>
+
+                    {/* Filters - Only for Orders */}
+                    {isOrderModal && (
+                      <>
+                        {/* Status Filter */}
+                        <select
+                          value={filterStatus}
+                          onChange={(e) => setFilterStatus(e.target.value)}
+                          className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-400 focus:border-transparent text-sm"
+                        >
+                          <option value="">All Statuses</option>
+                          <option value="Tech Pack Received">Tech Pack Received</option>
+                          <option value="Cutting">Cutting</option>
+                          <option value="Production">Production</option>
+                          <option value="Quality Control">Quality Control</option>
+                          <option value="Completed">Completed</option>
+                        </select>
+
+                        {/* Priority Filter */}
+                        <select
+                          value={filterPriority}
+                          onChange={(e) => setFilterPriority(e.target.value)}
+                          className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-400 focus:border-transparent text-sm"
+                        >
+                          <option value="">All Priorities</option>
+                          <option value="LOW">Low</option>
+                          <option value="MEDIUM">Medium</option>
+                          <option value="HIGH">High</option>
+                          <option value="URGENT">Urgent</option>
+                        </select>
+
+                        {/* Client Filter */}
+                        <select
+                          value={filterClient}
+                          onChange={(e) => setFilterClient(e.target.value)}
+                          className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-400 focus:border-transparent text-sm"
+                        >
+                          <option value="">All Clients</option>
+                          {allClients.map((client) => (
+                            <option key={client._id} value={client._id}>
+                              {client.name}
+                            </option>
+                          ))}
+                        </select>
+                      </>
+                    )}
+                  </div>
+
+                  {/* Clear Filters */}
+                  {hasActiveFilters && (
+                    <button
+                      onClick={resetFilters}
+                      className="mt-3 text-sm text-gray-600 hover:text-gray-900 flex items-center gap-1"
+                    >
+                      <X className="w-4 h-4" />
+                      Clear all filters
+                    </button>
+                  )}
+
+                  {/* Results count */}
+                  <p className="mt-2 text-sm text-gray-600">
+                    Showing {filteredModalData.length} of {modalData.length} results
+                  </p>
+                </div>
+              )}
+
               {/* Modal Content */}
-              <div className="p-6 overflow-y-auto max-h-[calc(80vh-100px)]">
+              <div className="p-6 overflow-y-auto flex-1">
                 {modalLoading ? (
                   <div className="flex items-center justify-center py-12">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
                   </div>
-                ) : modalData.length === 0 ? (
-                  <p className="text-center text-gray-500 py-12">No data available</p>
+                ) : filteredModalData.length === 0 ? (
+                  <p className="text-center text-gray-500 py-12">
+                    {hasActiveFilters ? "No results match your filters" : "No data available"}
+                  </p>
                 ) : (
                   <div className="space-y-3">
-                    {modalData.map((item, idx) => (
+                    {filteredModalData.map((item, idx) => (
                       <div
                         key={idx}
                         onClick={() => {
