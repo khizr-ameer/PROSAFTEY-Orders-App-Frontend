@@ -43,16 +43,14 @@ export default function StaffClients() {
               key={client._id}
               className="bg-white p-6 rounded-3xl shadow-md flex flex-col sm:flex-row justify-between items-center transition-transform hover:scale-[1.01]"
             >
-              <div
-                className="flex flex-col sm:flex-row sm:space-x-6 items-start sm:items-center flex-1 cursor-pointer"
-                onClick={() => navigate(`/staff/clients/${client._id}`)}
-              >
+              {/* ================= CLIENT NAME (NON-CLICKABLE) ================= */}
+              <div className="flex flex-col sm:flex-row sm:space-x-6 items-start sm:items-center flex-1">
                 <div>
                   <h2 className="text-xl font-semibold">{client.name}</h2>
-                  <p className="text-gray-500">{client.email}</p>
                 </div>
               </div>
 
+              {/* ================= ORDER BUTTONS ================= */}
               <div className="flex space-x-3 mt-4 sm:mt-0">
                 <button
                   className="bg-black text-white px-3 py-2 rounded-xl font-semibold hover:bg-gray-900 transition"

@@ -27,10 +27,10 @@ export default function Dashboard() {
         const data = res.data;
 
         setStats([
-          { title: "Clients", value: data.totalClients, icon: Users, color: "bg-blue-500" },
-          { title: "Staff Members", value: data.totalStaff, icon: Users, color: "bg-purple-500" },
-          { title: "Active Orders", value: data.activeOrders, icon: Package, color: "bg-green-500" },
-          { title: "Completed Orders", value: data.completedOrders, icon: TrendingUp, color: "bg-indigo-500" },
+          { title: "Clients", value: data.totalClients, icon: Users, color: "bg-blue-600" },
+          { title: "Staff Members", value: data.totalStaff, icon: Users, color: "bg-green-600" },
+          { title: "Active Orders", value: data.activeOrders, icon: Package, color: "bg-yellow-500" },
+          { title: "Completed Orders", value: data.completedOrders, icon: TrendingUp, color: "bg-purple-600" },
         ]);
 
         const formattedStatus = Object.entries(data.statusBreakdown).map(
@@ -164,11 +164,11 @@ export default function Dashboard() {
       <div className="min-h-screen pb-10 space-y-10">
 
         {/* ================= HEADER ================= */}
-        <div className="bg-gradient-to-r from-indigo-50 via-white to-pink-50 rounded-3xl p-8 shadow-inner">
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-800">
+        <div className="bg-gradient-to-r from-gray-50 via-white to-gray-100 rounded-3xl p-8 shadow-inner border border-gray-200">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
             Owner Dashboard
           </h1>
-          <p className="text-gray-500 mt-1">
+          <p className="text-gray-600 mt-1">
             Overview of operations & performance
           </p>
         </div>
@@ -214,12 +214,12 @@ export default function Dashboard() {
                   <button
                     key={i}
                     onClick={() => handleCardClick(card.title)}
-                    className="bg-white shadow-lg hover:shadow-2xl transition-all rounded-3xl p-6 text-left group cursor-pointer transform hover:scale-105"
+                    className="bg-white shadow-lg hover:shadow-2xl transition-all rounded-3xl p-6 text-left group cursor-pointer transform hover:scale-105 border border-gray-100"
                   >
                     <div className="flex items-start justify-between">
                       <div>
-                        <p className="text-gray-400 font-medium text-sm">{card.title}</p>
-                        <h2 className="text-3xl font-bold mt-2 text-gray-800">
+                        <p className="text-gray-500 font-medium text-sm">{card.title}</p>
+                        <h2 className="text-3xl font-bold mt-2 text-gray-900">
                           {card.value}
                         </h2>
                       </div>
@@ -227,7 +227,7 @@ export default function Dashboard() {
                         <Icon className="w-6 h-6 text-white" />
                       </div>
                     </div>
-                    <p className="text-xs text-indigo-600 font-medium mt-3 group-hover:underline">
+                    <p className="text-xs text-gray-700 font-medium mt-3 group-hover:underline">
                       View Details →
                     </p>
                   </button>
@@ -236,9 +236,9 @@ export default function Dashboard() {
         </div>
 
         {/* ================= STATUS BREAKDOWN ================= */}
-        <div className="bg-white rounded-3xl p-8 shadow-md">
-          <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
-            <Package className="w-5 h-5 text-indigo-600" />
+        <div className="bg-white rounded-3xl p-8 shadow-md border border-gray-100">
+          <h2 className="text-xl font-semibold mb-6 flex items-center gap-2 text-gray-900">
+            <Package className="w-5 h-5 text-gray-700" />
             Order Status Breakdown
           </h2>
 
@@ -251,15 +251,15 @@ export default function Dashboard() {
                   <button
                     key={i}
                     onClick={() => handleStatusClick(item.title)}
-                    className="bg-gray-50 hover:bg-indigo-50 rounded-2xl p-5 text-center transition-all cursor-pointer group border-2 border-transparent hover:border-indigo-200"
+                    className="bg-gray-50 hover:bg-gray-100 rounded-2xl p-5 text-center transition-all cursor-pointer group border-2 border-transparent hover:border-gray-300"
                   >
-                    <p className="text-sm text-gray-500 group-hover:text-indigo-700 font-medium">
+                    <p className="text-sm text-gray-600 group-hover:text-gray-900 font-medium">
                       {item.title}
                     </p>
-                    <p className="text-2xl font-bold mt-1 text-gray-800 group-hover:text-indigo-600">
+                    <p className="text-2xl font-bold mt-1 text-gray-900">
                       {item.value}
                     </p>
-                    <p className="text-xs text-indigo-600 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <p className="text-xs text-gray-700 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
                       Click to view
                     </p>
                   </button>
@@ -282,8 +282,8 @@ export default function Dashboard() {
                   <div className="flex items-start gap-3">
                     <Calendar className="w-5 h-5 text-amber-600 mt-0.5" />
                     <div className="flex-1">
-                      <h3 className="font-semibold">⚠ Orders Due Soon</h3>
-                      <p className="text-gray-500 text-sm mt-1">
+                      <h3 className="font-semibold text-gray-900">⚠ Orders Due Soon</h3>
+                      <p className="text-gray-600 text-sm mt-1">
                         {alerts.dueSoon} order{alerts.dueSoon !== 1 ? "s" : ""} due in the next 3 days
                       </p>
                       <p className="text-xs text-amber-600 font-medium mt-2 group-hover:underline">
@@ -300,8 +300,8 @@ export default function Dashboard() {
                   <div className="flex items-start gap-3">
                     <DollarSign className="w-5 h-5 text-green-600 mt-0.5" />
                     <div className="flex-1">
-                      <h3 className="font-semibold">💰 Payments Pending</h3>
-                      <p className="text-gray-500 text-sm mt-1">
+                      <h3 className="font-semibold text-gray-900">💰 Payments Pending</h3>
+                      <p className="text-gray-600 text-sm mt-1">
                         {alerts.paymentPending} order{alerts.paymentPending !== 1 ? "s" : ""} have pending payments
                       </p>
                       <p className="text-xs text-green-600 font-medium mt-2 group-hover:underline">
@@ -319,7 +319,7 @@ export default function Dashboard() {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[80vh] overflow-hidden">
               {/* Modal Header */}
-              <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-6 flex items-center justify-between">
+              <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white p-6 flex items-center justify-between">
                 <h2 className="text-2xl font-bold">{modalType}</h2>
                 <button
                   onClick={closeModal}
@@ -333,7 +333,7 @@ export default function Dashboard() {
               <div className="p-6 overflow-y-auto max-h-[calc(80vh-100px)]">
                 {modalLoading ? (
                   <div className="flex items-center justify-center py-12">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
                   </div>
                 ) : modalData.length === 0 ? (
                   <p className="text-center text-gray-500 py-12">No data available</p>
@@ -347,7 +347,7 @@ export default function Dashboard() {
                             handleOrderClick(item);
                           }
                         }}
-                        className={`bg-gray-50 hover:bg-gray-100 rounded-xl p-4 transition ${
+                        className={`bg-gray-50 hover:bg-gray-100 rounded-xl p-4 transition border border-gray-200 ${
                           item.sampleName || item.poNumber ? "cursor-pointer" : ""
                         }`}
                       >
@@ -360,7 +360,7 @@ export default function Dashboard() {
                             {item.email && <p className="text-sm text-gray-600">{item.email}</p>}
                             {item.company && <p className="text-sm text-gray-500">{item.company}</p>}
                             {item.role && (
-                              <span className="inline-block mt-2 px-3 py-1 bg-indigo-100 text-indigo-700 text-xs font-medium rounded-full">
+                              <span className="inline-block mt-2 px-3 py-1 bg-gray-200 text-gray-800 text-xs font-medium rounded-full">
                                 {item.role}
                               </span>
                             )}
@@ -390,7 +390,7 @@ export default function Dashboard() {
                                 Client: {item.clientId?.name || "N/A"}
                               </p>
                               <div className="flex items-center gap-4 mt-2 text-sm flex-wrap">
-                                <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full">
+                                <span className="px-3 py-1 bg-gray-200 text-gray-800 rounded-full">
                                   {item.status}
                                 </span>
                                 {item.productionDueDate && (
@@ -407,7 +407,7 @@ export default function Dashboard() {
                                 )}
                               </div>
                             </div>
-                            <div className="text-indigo-600 text-sm font-medium">
+                            <div className="text-gray-700 text-sm font-medium">
                               View →
                             </div>
                           </div>
