@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import axios from "../api/axios";
@@ -11,6 +11,18 @@ export default function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  // Redirect if already logged in
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("role");
+    
+    if (token && role) {
+      if (role === "OWNER") navigate("/owner/dashboard", { replace: true });
+      else if (role === "STAFF") navigate("/staff/dashboard", { replace: true });
+      else navigate("/", { replace: true });
+    }
+  }, [navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -29,9 +41,10 @@ export default function Login() {
       localStorage.setItem("token", token);
       localStorage.setItem("role", role);
 
-      if (role === "OWNER") navigate("/owner/dashboard");
-      else if (role === "STAFF") navigate("/staff/dashboard");
-      else navigate("/");
+      // Use replace: true to prevent back button issue
+      if (role === "OWNER") navigate("/owner/dashboard", { replace: true });
+      else if (role === "STAFF") navigate("/staff/dashboard", { replace: true });
+      else navigate("/", { replace: true });
     } catch (err) {
       setError(
         err.response?.data?.message || "Server error. Try again later."

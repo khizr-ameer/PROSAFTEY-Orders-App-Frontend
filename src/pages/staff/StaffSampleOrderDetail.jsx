@@ -71,7 +71,7 @@ export default function StaffSampleOrderDetail() {
     const ext = file.split(".").pop().toLowerCase();
     const isImage = ["jpg", "jpeg", "png", "webp"].includes(ext);
     const isPDF = ext === "pdf";
-    const fileUrl = `${BASE_URL}/${file}`;
+    const fileUrl = file;
 
     return (
       <div className="flex items-center gap-4">

@@ -63,13 +63,13 @@ export default function StaffSampleOrders() {
               <div className="flex items-center space-x-4">
                 {sample.graphicFile ? (
                   <img
-                    src={`http://localhost:5000/${sample.graphicFile}`}
+                    src={sample.graphicFile}
                     alt={sample.sampleName}
                     className="w-12 h-12 rounded-xl object-cover border"
                     onClick={(e) => {
                       e.stopPropagation();
                       window.open(
-                        `http://localhost:5000/${sample.graphicFile}`,
+                        `{sample.graphicFile}`,
                         "_blank"
                       );
                     }}

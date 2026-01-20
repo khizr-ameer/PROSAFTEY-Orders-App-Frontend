@@ -3,8 +3,6 @@ import { useParams } from "react-router-dom";
 import OwnerLayout from "../../layouts/OwnerLayout";
 import axios from "../../api/axios";
 
-const BASE_URL = "http://localhost:5000";
-
 export default function SampleOrderDetail() {
   const { sampleId } = useParams();
 
@@ -12,7 +10,6 @@ export default function SampleOrderDetail() {
   const [form, setForm] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [cacheBuster, setCacheBuster] = useState(Date.now());
 
   // ====================
   // Fetch Sample Order
@@ -58,7 +55,6 @@ export default function SampleOrderDetail() {
 
       setOrder(res.data);
       setForm(res.data);
-      setCacheBuster(Date.now());
       setIsEditing(false);
       alert("Sample order updated successfully!");
     } catch (err) {
@@ -70,15 +66,16 @@ export default function SampleOrderDetail() {
   if (!order) return <div className="p-6">Sample order not found</div>;
 
   // ====================
-  // File Preview
+  // File Preview - CLOUDINARY VERSION
   // ====================
   const renderFilePreview = (file) => {
     if (!file) return <span className="text-gray-400">No file</span>;
 
-    const ext = file.split(".").pop().toLowerCase();
+    // Cloudinary URLs are complete, use them directly
+    const fileUrl = file;
+    const ext = file.split(".").pop().toLowerCase().split("?")[0]; // Handle query params
     const isImage = ["jpg", "jpeg", "png", "webp"].includes(ext);
     const isPDF = ext === "pdf";
-    const fileUrl = `${BASE_URL}/${file}?v=${cacheBuster}`;
 
     return (
       <div className="flex items-center gap-4">
@@ -261,7 +258,7 @@ export default function SampleOrderDetail() {
 
           {/* Fabric */}
           <div className="sm:col-span-2">
-            <p className="text-sm text-gray-500">Fabric Details</p>
+            <p className="text-small text-gray-500">Fabric Details</p>
             {isEditing ? (
               <textarea
                 name="fabricDetails"
@@ -271,7 +268,7 @@ export default function SampleOrderDetail() {
                 className="w-full border rounded-xl px-4 py-2 resize-none"
               />
             ) : (
-              <p className="text-lg font-medium">{order.fabricDetails}</p>
+              <p className="text-md font-medium">{order.fabricDetails}</p>
             )}
           </div>
         </div>

@@ -3,8 +3,6 @@ import { useParams } from "react-router-dom";
 import StaffLayout from "../../layouts/StaffLayout";
 import axios from "../../api/axios";
 
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
-
 export default function StaffPurchaseOrderDetail({ user }) {
   const { purchaseId } = useParams();
 
@@ -56,12 +54,12 @@ export default function StaffPurchaseOrderDetail({ user }) {
   };
 
   // =========================
-  // Open File (PDF / Image)
+  // Open File (PDF / Image) - CLOUDINARY VERSION
   // =========================
   const openFile = (filePath) => {
     if (!filePath) return;
-    const cacheBuster = new Date().getTime();
-    window.open(`${BASE_URL}/${filePath}?v=${cacheBuster}`, "_blank");
+    // Cloudinary URLs are complete, use them directly
+    window.open(filePath, "_blank");
   };
 
   return (
@@ -172,7 +170,7 @@ export default function StaffPurchaseOrderDetail({ user }) {
                 </p>
               </div>
 
-              {/* Product Image */}
+              {/* Product Image - CLOUDINARY VERSION */}
               <div className="space-y-2">
                 <div
                   className="w-32 h-32 border border-dashed border-gray-300 rounded-xl flex items-center justify-center overflow-hidden bg-gray-50 cursor-pointer"
@@ -182,7 +180,7 @@ export default function StaffPurchaseOrderDetail({ user }) {
                 >
                   {product.productImage ? (
                     <img
-                      src={`${BASE_URL}/${product.productImage}`}
+                      src={product.productImage}
                       alt={product.productName}
                       className="w-full h-full object-cover"
                     />
