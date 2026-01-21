@@ -253,7 +253,7 @@ export default function PurchaseOrderDetail() {
                 className="w-full border border-gray-300 rounded-xl px-4 py-3"
               />
               <div>
-                <p className="text-sm text-gray-500">Add New Invoice</p>
+                <p className="text-sm text-gray-500 ">Add New Invoice</p>
                 <input
                   type="file"
                   onChange={(e) => handleInvoiceChange(e.target.files)}
@@ -298,7 +298,7 @@ export default function PurchaseOrderDetail() {
                   <p className="text-sm text-gray-500">Invoice</p>
                   <button
                     onClick={() => openFile(poData.invoiceFile)}
-                    className="px-4 py-2 rounded-xl border text-sm hover:bg-gray-200"
+                    className="px-4 py-2 rounded-xl font-semibold border bg-green-100 text-greeb-700 text-sm hover:bg-green-200"
                   >
                     View Invoice
                   </button>
@@ -326,7 +326,7 @@ export default function PurchaseOrderDetail() {
 
               <button
                 onClick={downloadCSV}
-                className="px-4 py-2 rounded-xl border text-medium font-bold text-black hover:bg-gray-200"
+                className="px-4 py-2 rounded-xl border text-medium font-semibold text-black hover:bg-gray-200"
               >
                 Download PO
               </button>

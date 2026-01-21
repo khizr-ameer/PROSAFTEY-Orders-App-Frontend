@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Create an axios instance
 const instance = axios.create({
-  baseURL: "http://localhost:5000/api", // Change this to your backend URL
+  baseURL: "https://prosaftey-backend.onrender.com/api", // Change this to your backend URL
   headers: {
     "Content-Type": "application/json",
   },
