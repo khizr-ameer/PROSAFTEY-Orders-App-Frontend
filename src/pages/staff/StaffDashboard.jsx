@@ -22,6 +22,7 @@ export default function Dashboard() {
   const [filterStatus, setFilterStatus] = useState("");
   const [filterPriority, setFilterPriority] = useState("");
   const [filterClient, setFilterClient] = useState("");
+  const [filterOrderType, setFilterOrderType] = useState(""); // NEW: Order Type Filter
   const [allClients, setAllClients] = useState([]);
 
   useEffect(() => {
@@ -102,8 +103,20 @@ export default function Dashboard() {
       });
     }
 
+    // Order Type filter (NEW)
+    if (filterOrderType) {
+      filtered = filtered.filter(item => {
+        if (filterOrderType === "sample") {
+          return item.sampleName !== undefined;
+        } else if (filterOrderType === "purchase") {
+          return item.poNumber !== undefined;
+        }
+        return true;
+      });
+    }
+
     setFilteredModalData(filtered);
-  }, [searchTerm, filterStatus, filterPriority, filterClient, modalData]);
+  }, [searchTerm, filterStatus, filterPriority, filterClient, filterOrderType, modalData]);
 
   const handleCardClick = async (type) => {
     setModalType(type);
@@ -202,6 +215,7 @@ export default function Dashboard() {
     setFilterStatus("");
     setFilterPriority("");
     setFilterClient("");
+    setFilterOrderType(""); // NEW
   };
 
   const closeModal = () => {
@@ -212,7 +226,7 @@ export default function Dashboard() {
   };
 
   const isOrderModal = modalType && modalType !== "Clients";
-  const hasActiveFilters = searchTerm || filterStatus || filterPriority || filterClient;
+  const hasActiveFilters = searchTerm || filterStatus || filterPriority || filterClient || filterOrderType;
 
   return (
     <StaffLayout>
@@ -350,7 +364,7 @@ export default function Dashboard() {
         {/* ================= MODAL ================= */}
         {modalOpen && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[85vh] overflow-hidden flex flex-col">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[85vh] overflow-hidden flex flex-col">
               {/* Modal Header */}
               <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white p-6 flex items-center justify-between">
                 <h2 className="text-2xl font-bold">{modalType}</h2>
@@ -365,7 +379,7 @@ export default function Dashboard() {
               {/* Search & Filters */}
               {!modalLoading && (
                 <div className="p-4 bg-gray-50 border-b border-gray-200">
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-3">
                     {/* Search */}
                     <div className="lg:col-span-2 relative">
                       <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
@@ -381,6 +395,17 @@ export default function Dashboard() {
                     {/* Filters - Only for Orders */}
                     {isOrderModal && (
                       <>
+                        {/* Order Type Filter (NEW) */}
+                        <select
+                          value={filterOrderType}
+                          onChange={(e) => setFilterOrderType(e.target.value)}
+                          className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-400 focus:border-transparent text-sm"
+                        >
+                          <option value="">All Order Types</option>
+                          <option value="sample">Sample Orders</option>
+                          <option value="purchase">Purchase Orders</option>
+                        </select>
+
                         {/* Status Filter */}
                         <select
                           value={filterStatus}
@@ -481,10 +506,14 @@ export default function Dashboard() {
                         {(item.sampleName || item.poNumber) && (
                           <div className="flex items-start justify-between">
                             <div className="flex-1">
-                              <div className="flex items-center gap-2">
+                              <div className="flex items-center gap-2 flex-wrap">
                                 <p className="font-semibold text-gray-800">
                                   {item.sampleName || item.poNumber}
                                 </p>
+                                {/* Order Type Badge (NEW) */}
+                                <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-700">
+                                  {item.sampleName ? "Sample" : "Purchase"}
+                                </span>
                                 {item.priority && (
                                   <span className={`px-2 py-1 text-xs font-medium rounded-full ${
                                     item.priority === "URGENT" ? "bg-red-100 text-red-700" :
