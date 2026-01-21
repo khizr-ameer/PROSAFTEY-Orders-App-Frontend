@@ -122,7 +122,7 @@ export default function Profile() {
   return (
     <LayoutWrapper>
       <div className="max-w-2xl mx-auto space-y-8">
-        <h1 className="text-3xl font-semibold">My Profile</h1>
+        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">My Profile</h1>
 
         {/* User Info */}
         <div className="bg-white rounded-3xl p-6 shadow-md space-y-3">
@@ -207,7 +207,7 @@ export default function Profile() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-black text-white py-3 rounded-xl"
+            className="w-full bg-black font-semibold text-white py-3 rounded-xl"
           >
             {loading ? "Updating..." : "Update Password"}
           </button>

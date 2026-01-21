@@ -130,11 +130,11 @@ export default function Staff() {
     <OwnerLayout>
       {/* HEADER */}
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-semibold">Staff</h1>
+         <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">Staffs</h1>
 
         <button
           onClick={() => setShowCreateModal(true)}
-          className="bg-black text-white px-6 py-3 rounded-xl"
+          className="bg-black font-semibold text-white px-6 py-3 rounded-xl"
         >
           + Add Staff
         </button>

@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PrivateRoute from "./auth/PrivateRoute";
 
 import Login from "./auth/Login";
-import Profile from "./pages/profile";
+import Profile from "./pages/Profile";
 
 // Owner pages
 import Dashboard from "./pages/owner/Dashboard";
@@ -21,7 +21,6 @@ import CreateStaff from "./pages/owner/CreateStaff";
 // Staff pages
 import StaffDashboard from "./pages/staff/StaffDashboard";
 import StaffClients from "./pages/staff/StaffClients";
-// import StaffClientDetail from "./pages/staff/StaffClientDetail";
 import StaffSampleOrders from "./pages/staff/StaffSampleOrders";
 import StaffPurchaseOrders from "./pages/staff/StaffPurchaseOrders";
 import StaffSampleOrderDetail from "./pages/staff/StaffSampleOrderDetail";

@@ -50,7 +50,7 @@ export default function ClientDetail() {
     <OwnerLayout>
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl sm:text-4xl font-medium">Client Details</h1>
+           <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">Client Details</h1>
           <button
             onClick={() => {
               setIsEditing(!isEditing);
