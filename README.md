@@ -1,4 +1,4 @@
-# 🏭 ProSafety Orders Management System
+# ProSafety Orders Management System
 
 A modern order management system for tracking sample orders, purchase orders, and client management in manufacturing environments.
 
@@ -15,7 +15,7 @@ A modern order management system for tracking sample orders, purchase orders, an
 - 📊 **Real-time Analytics** - Track orders, clients, and performance
 - 🎨 **Modern UI** - Clean, responsive design with Tailwind CSS
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 **Frontend:** React, Vite, Tailwind CSS, Axios  
 **Backend:** Node.js, Express, MongoDB, JWT Authentication  
@@ -23,7 +23,7 @@ A modern order management system for tracking sample orders, purchase orders, an
 
 
 
-## 🌐 Deployment
+##  Deployment
 
 ### Vercel (Frontend)
 1. Create `vercel.json` in frontend folder:
@@ -38,12 +38,12 @@ A modern order management system for tracking sample orders, purchase orders, an
 4. Add environment variables
 5. Deploy!
 
-## 📱 User Roles
+##  User Roles
 
 **Owner** - Full access, manage clients, staff, all orders  
 **Staff** - View and manage orders, track production  
 
-## 🔑 Main Features
+##  Main Features
 
 ### Dashboard
 - View total clients, staff, active/completed orders
