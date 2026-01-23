@@ -8,6 +8,23 @@ html, body, #root {
   margin: 0;
 }
 
+/* Scrollbar Styles */
+html {
+  scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #495670; 
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #5e6f91; 
+}
+
 /* Optional global font (Apple-like) */
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont,
