@@ -142,7 +142,7 @@ export default function Login() {
             type="submit"
             disabled={loading}
             className={`
-              w-full bg-black text-white py-3 rounded-xl
+              w-full bg-black font-semibold text-white py-3 rounded-xl
               text-base sm:text-lg
               transition-transform
               ${loading ? "opacity-50 cursor-not-allowed" : "hover:scale-[1.02]"}
@@ -151,6 +151,7 @@ export default function Login() {
             {loading ? "Signing In..." : "Sign In"}
           </button>
         </form>
+        
       </div>
 
       {/* Animations */}
