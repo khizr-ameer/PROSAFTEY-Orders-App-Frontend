@@ -216,7 +216,7 @@ export default function Profile() {
         {/* Logout */}
         <button
           onClick={() => setShowLogoutConfirm(true)}
-          className="bg-red-600 text-white px-6 py-3 rounded-xl flex items-center gap-2"
+          className="bg-red-600 text-white px-6 py-3 font-semibold rounded-xl flex items-center gap-2"
         >
           <LogOut size={18} />
           Logout
