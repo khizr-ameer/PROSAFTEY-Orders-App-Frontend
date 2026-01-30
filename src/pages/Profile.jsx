@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import OwnerLayout from "../layouts/OwnerLayout";
 import StaffLayout from "../layouts/StaffLayout";
-import { LogOut, Eye, EyeOff } from "lucide-react";
+import { LogOut, Eye, EyeOff, User, Mail, Shield, Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/axios";
 import { jwtDecode } from "jwt-decode";
@@ -110,7 +110,14 @@ export default function Profile() {
   };
 
   if (loadingUser) {
-    return <div className="p-4">Loading user info...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-gray-900 border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-gray-500 font-medium">Loading user info...</p>
+        </div>
+      </div>
+    );
   }
 
   // =========================
@@ -121,127 +128,209 @@ export default function Profile() {
 
   return (
     <LayoutWrapper>
-      <div className="max-w-2xl mx-auto space-y-8">
-        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">My Profile</h1>
-
-        {/* User Info */}
-        <div className="bg-white rounded-3xl p-6 shadow-md space-y-3">
-          <div>
-            <p className="text-sm text-gray-500">Email</p>
-            <p className="text-lg font-medium">{user.email || "N/A"}</p>
-          </div>
-
-          <div>
-            <p className="text-sm text-gray-500">Role</p>
-            <p className="text-lg font-medium">{user.role || "N/A"}</p>
-          </div>
+      <div className="max-w-4xl mx-auto">
+        {/* Header Section */}
+        <div className="mb-8">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">My Profile</h1>
+          <p className="text-gray-500 mt-1">Manage your account settings and security</p>
         </div>
 
-        {/* Change Password */}
-        <form
-          onSubmit={handlePasswordChange}
-          className="bg-white rounded-3xl p-6 shadow-md space-y-4"
-        >
-          <h2 className="text-xl font-semibold">Change Password</h2>
+        <div className="grid gap-6">
+          {/* User Info Card */}
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200">
+            <div className="p-6 border-b border-gray-200">
+              <div className="flex items-center gap-3">
+                <div className="w-16 h-16 bg-gradient-to-br from-gray-700 to-gray-900 rounded-2xl flex items-center justify-center">
+                  <User className="w-8 h-8 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-semibold text-gray-900">Account Information</h2>
+                  <p className="text-sm text-gray-500">Your personal details</p>
+                </div>
+              </div>
+            </div>
 
-          {/* Old Password */}
-          <div className="relative">
-            <input
-              type={showOld ? "text" : "password"}
-              name="oldPassword"
-              value={form.oldPassword}
-              onChange={handleChange}
-              placeholder="Old Password"
-              required
-              className="w-full border rounded-xl px-4 py-3 pr-12"
-            />
-            <button
-              type="button"
-              onClick={() => setShowOld(!showOld)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500"
-            >
-              {showOld ? <EyeOff size={20} /> : <Eye size={20} />}
-            </button>
+            <div className="p-6 space-y-4">
+              <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-xl">
+                <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center border border-gray-200 flex-shrink-0">
+                  <Mail className="w-5 h-5 text-gray-700" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-gray-500">Email Address</p>
+                  <p className="text-base font-semibold text-gray-900 mt-1">{user.email || "N/A"}</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-xl">
+                <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center border border-gray-200 flex-shrink-0">
+                  <Shield className="w-5 h-5 text-gray-700" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-gray-500">Role</p>
+                  <div className="mt-1">
+                    <span className="inline-flex items-center px-3 py-1 rounded-lg bg-gray-900 text-white text-sm font-semibold">
+                      {user.role || "N/A"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* New Password */}
-          <div className="relative">
-            <input
-              type={showNew ? "text" : "password"}
-              name="newPassword"
-              value={form.newPassword}
-              onChange={handleChange}
-              placeholder="New Password"
-              required
-              className="w-full border rounded-xl px-4 py-3 pr-12"
-            />
-            <button
-              type="button"
-              onClick={() => setShowNew(!showNew)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500"
-            >
-              {showNew ? <EyeOff size={20} /> : <Eye size={20} />}
-            </button>
+          {/* Change Password Card */}
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200">
+            <div className="p-6 border-b border-gray-200">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-gray-900 rounded-xl flex items-center justify-center">
+                  <Lock className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-semibold text-gray-900">Change Password</h2>
+                  <p className="text-sm text-gray-500">Update your password to keep your account secure</p>
+                </div>
+              </div>
+            </div>
+
+            <form onSubmit={handlePasswordChange} className="p-6">
+              <div className="space-y-4">
+                {/* Old Password */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Current Password
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showOld ? "text" : "password"}
+                      name="oldPassword"
+                      value={form.oldPassword}
+                      onChange={handleChange}
+                      placeholder="Enter your current password"
+                      required
+                      className="w-full border border-gray-300 rounded-xl px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowOld(!showOld)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors"
+                    >
+                      {showOld ? <EyeOff size={20} /> : <Eye size={20} />}
+                    </button>
+                  </div>
+                </div>
+
+                {/* New Password */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    New Password
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showNew ? "text" : "password"}
+                      name="newPassword"
+                      value={form.newPassword}
+                      onChange={handleChange}
+                      placeholder="Enter your new password"
+                      required
+                      className="w-full border border-gray-300 rounded-xl px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowNew(!showNew)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors"
+                    >
+                      {showNew ? <EyeOff size={20} /> : <Eye size={20} />}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Confirm Password */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Confirm New Password
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showConfirm ? "text" : "password"}
+                      name="confirmPassword"
+                      value={form.confirmPassword}
+                      onChange={handleChange}
+                      placeholder="Confirm your new password"
+                      required
+                      className="w-full border border-gray-300 rounded-xl px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirm(!showConfirm)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors"
+                    >
+                      {showConfirm ? <EyeOff size={20} /> : <Eye size={20} />}
+                    </button>
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-black hover:bg-gray-900 disabled:bg-gray-400 font-semibold text-white py-3 rounded-xl transition-all shadow-lg mt-6"
+                >
+                  {loading ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      Updating...
+                    </span>
+                  ) : (
+                    "Update Password"
+                  )}
+                </button>
+              </div>
+            </form>
           </div>
 
-          {/* Confirm Password */}
-          <div className="relative">
-            <input
-              type={showConfirm ? "text" : "password"}
-              name="confirmPassword"
-              value={form.confirmPassword}
-              onChange={handleChange}
-              placeholder="Confirm New Password"
-              required
-              className="w-full border rounded-xl px-4 py-3 pr-12"
-            />
-            <button
-              type="button"
-              onClick={() => setShowConfirm(!showConfirm)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500"
-            >
-              {showConfirm ? <EyeOff size={20} /> : <Eye size={20} />}
-            </button>
+          {/* Logout Section */}
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">Logout</h3>
+                <p className="text-sm text-gray-500 mt-1">Sign out of your account</p>
+              </div>
+              <button
+                onClick={() => setShowLogoutConfirm(true)}
+                className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 font-semibold rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-red-500/30"
+              >
+                <LogOut size={18} />
+                Logout
+              </button>
+            </div>
           </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-black font-semibold text-white py-3 rounded-xl"
-          >
-            {loading ? "Updating..." : "Update Password"}
-          </button>
-        </form>
-
-        {/* Logout */}
-        <button
-          onClick={() => setShowLogoutConfirm(true)}
-          className="bg-red-600 text-white px-6 py-3 font-semibold rounded-xl flex items-center gap-2"
-        >
-          <LogOut size={18} />
-          Logout
-        </button>
+        </div>
       </div>
 
       {/* Logout Confirmation Modal */}
       {showLogoutConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-6 w-80 space-y-4">
-            <h2 className="text-lg font-semibold">Confirm Logout</h2>
-            <p className="text-gray-600 text-sm">
-              Are you sure you want to logout?
-            </p>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl">
+            <div className="flex items-start gap-4 mb-4">
+              <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                <LogOut className="w-6 h-6 text-red-600" />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold text-gray-900">Confirm Logout</h2>
+                <p className="text-gray-600 text-sm mt-1">
+                  Are you sure you want to logout? You'll need to sign in again to access your account.
+                </p>
+              </div>
+            </div>
 
-            <div className="flex justify-end gap-3 pt-4">
+            <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4">
               <button
                 onClick={() => setShowLogoutConfirm(false)}
-                className="px-4 py-2 rounded-lg border"
+                className="px-6 py-2.5 rounded-xl border border-gray-300 hover:bg-gray-50 font-medium transition-all"
               >
                 Cancel
               </button>
               <button
                 onClick={confirmLogout}
-                className="px-4 py-2 rounded-lg bg-red-600 text-white"
+                className="px-6 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-semibold transition-all shadow-lg shadow-red-500/30"
               >
                 Logout
               </button>
