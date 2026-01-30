@@ -138,8 +138,8 @@ export default function Staff() {
         <div className="mb-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <div>
-              <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">Staff Management</h1>
-              <p className="text-gray-500 mt-1">Manage your team members and permissions</p>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Staff Management</h1>
+              <p className="text-gray-500 mt-1 text-sm">Manage your team members and permissions</p>
             </div>
 
             <button
@@ -182,8 +182,8 @@ export default function Staff() {
               <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Users className="w-10 h-10 text-gray-900" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">No staff members yet</h3>
-              <p className="text-gray-500 mb-6">Add your first staff member to get started</p>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">No staff members yet</h3>
+              <p className="text-gray-500 mb-6 text-sm">Add your first staff member to get started</p>
               <button
                 onClick={() => setShowCreateModal(true)}
                 className="bg-black text-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-900 transition-all inline-flex items-center gap-2"
@@ -213,7 +213,7 @@ export default function Staff() {
                           {member.email.charAt(0).toUpperCase()}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h2 className="text-xl font-semibold text-gray-900 mb-1 break-all">{member.email}</h2>
+                          <h2 className="text-lg font-semibold text-gray-900 mb-1 break-all">{member.email}</h2>
                           <span className="inline-flex items-center px-3 py-1 rounded-lg bg-gray-900 text-white text-xs font-semibold">
                             {member.role}
                           </span>
@@ -262,7 +262,7 @@ export default function Staff() {
                   <UserPlus className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-semibold text-white">Create Staff Member</h2>
+                  <h2 className="text-lg font-semibold text-white">Create Staff Member</h2>
                   <p className="text-gray-300 text-sm">Add a new team member</p>
                 </div>
               </div>
@@ -348,7 +348,7 @@ export default function Staff() {
                   <Lock className="w-6 h-6 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h2 className="text-xl font-semibold text-white">Reset Password</h2>
+                  <h2 className="text-lg font-semibold text-white">Reset Password</h2>
                   <p className="text-gray-300 text-sm truncate">{selectedStaff?.email}</p>
                 </div>
               </div>
@@ -444,7 +444,7 @@ export default function Staff() {
                 <AlertCircle className="w-6 h-6 text-red-600" />
               </div>
               <div>
-                <h2 className="text-xl font-semibold text-gray-900">Delete Staff Member</h2>
+                <h2 className="text-lg font-semibold text-gray-900">Delete Staff Member</h2>
                 <p className="text-gray-600 text-sm mt-1">
                   Are you sure you want to delete{" "}
                   <strong className="text-gray-900">{selectedStaff?.email}</strong>? This action cannot be undone.
