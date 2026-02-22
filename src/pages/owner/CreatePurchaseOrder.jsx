@@ -12,14 +12,14 @@ export default function CreatePurchaseOrder() {
   const [status, setStatus] = useState("Tech Pack Received");
   const [paymentReceived, setPaymentReceived] = useState();
   const [invoiceFile, setInvoiceFile] = useState(null);
-  const [priority, setPriority] = useState("LOW"); // ✅ NEW: priority
+  const [priority, setPriority] = useState("MEDIUM"); // ✅ NEW: priority
   const [loading, setLoading] = useState(false);
 
   const [products, setProducts] = useState([
     {
       productName: "",
       productDescription: "", // ✅ NEW: description
-      sizes: [{ sizeName: "", quantity: 0 }],
+      sizes: [{ sizeName: "", quantity: "" }],
       quantity: 0,
       productImage: null,
     },
@@ -51,7 +51,7 @@ export default function CreatePurchaseOrder() {
 
   const addSize = (pIndex) => {
     const updated = [...products];
-    updated[pIndex].sizes.push({ sizeName: "", quantity: 0 });
+    updated[pIndex].sizes.push({ sizeName: "", quantity: "" });
     setProducts(updated);
   };
 
@@ -72,7 +72,7 @@ export default function CreatePurchaseOrder() {
       {
         productName: "",
         productDescription: "", // ✅ NEW
-        sizes: [{ sizeName: "", quantity: 0 }],
+        sizes: [{ sizeName: "", quantity: "" }],
         quantity: 0,
         productImage: null,
       },
