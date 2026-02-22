@@ -3,8 +3,6 @@ import { useParams } from "react-router-dom";
 import StaffLayout from "../../layouts/StaffLayout";
 import axios from "../../api/axios";
 
-const BASE_URL = "http://localhost:5000";
-
 export default function StaffSampleOrderDetail() {
   const { sampleId } = useParams();
 
@@ -63,15 +61,17 @@ export default function StaffSampleOrderDetail() {
   };
 
   // ====================
-  // File Preview (same UI)
+  // File Preview ✅ Updated to support Word & Excel
   // ====================
   const renderFilePreview = (file) => {
     if (!file) return <span className="text-gray-400">No file</span>;
 
-    const ext = file.split(".").pop().toLowerCase();
+    const fileUrl = file;
+    const ext = file.split(".").pop().toLowerCase().split("?")[0]; // handle query params
     const isImage = ["jpg", "jpeg", "png", "webp"].includes(ext);
     const isPDF = ext === "pdf";
-    const fileUrl = file;
+    const isDoc = ["doc", "docx"].includes(ext);       // ✅ NEW
+    const isExcel = ["xls", "xlsx", "csv"].includes(ext); // ✅ NEW
 
     return (
       <div className="flex items-center gap-4">
@@ -94,6 +94,24 @@ export default function StaffSampleOrderDetail() {
             className="px-4 py-2 rounded-xl border text-sm hover:bg-gray-200"
           >
             View PDF
+          </button>
+        )}
+
+        {isDoc && (                                        // ✅ NEW
+          <button
+            onClick={() => window.open(fileUrl, "_blank")}
+            className="px-4 py-2 rounded-xl border text-sm hover:bg-gray-200"
+          >
+            📄 View Word Document
+          </button>
+        )}
+
+        {isExcel && (                                      // ✅ NEW
+          <button
+            onClick={() => window.open(fileUrl, "_blank")}
+            className="px-4 py-2 rounded-xl border text-sm hover:bg-gray-200"
+          >
+            📊 View Excel File
           </button>
         )}
 
@@ -135,7 +153,7 @@ export default function StaffSampleOrderDetail() {
             </p>
           </div>
 
-          {/* ✅ PRIORITY (READ ONLY) */}
+          {/* Priority (READ ONLY) */}
           <div>
             <p className="text-sm text-gray-500">Priority</p>
             {order.priority ? (

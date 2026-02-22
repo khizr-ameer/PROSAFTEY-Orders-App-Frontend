@@ -17,7 +17,7 @@ export default function CreateSampleOrder() {
     trackingNumber: "",
     status: "Tech Pack Received",
     paymentReceived: "",
-    priority: " ", // ✅ NEW
+    priority: "MEDIUM", // ✅ NEW
   });
 
   const [loading, setLoading] = useState(false);

@@ -71,11 +71,12 @@ export default function SampleOrderDetail() {
   const renderFilePreview = (file) => {
     if (!file) return <span className="text-gray-400">No file</span>;
 
-    // Cloudinary URLs are complete, use them directly
     const fileUrl = file;
     const ext = file.split(".").pop().toLowerCase().split("?")[0]; // Handle query params
     const isImage = ["jpg", "jpeg", "png", "webp"].includes(ext);
     const isPDF = ext === "pdf";
+    const isDoc = ["doc", "docx"].includes(ext);       // ✅ NEW
+    const isExcel = ["xls", "xlsx", "csv"].includes(ext); // ✅ NEW
 
     return (
       <div className="flex items-center gap-4">
@@ -98,6 +99,24 @@ export default function SampleOrderDetail() {
             className="px-4 py-2 rounded-xl border text-sm hover:bg-gray-200"
           >
             View PDF
+          </button>
+        )}
+
+        {isDoc && (                                       // ✅ NEW
+          <button
+            onClick={() => window.open(fileUrl, "_blank")}
+            className="px-4 py-2 rounded-xl border text-sm hover:bg-gray-200"
+          >
+            📄 View Word Document
+          </button>
+        )}
+
+        {isExcel && (                                     // ✅ NEW
+          <button
+            onClick={() => window.open(fileUrl, "_blank")}
+            className="px-4 py-2 rounded-xl border text-sm hover:bg-gray-200"
+          >
+            📊 View Excel File
           </button>
         )}
 
@@ -189,7 +208,7 @@ export default function SampleOrderDetail() {
             )}
           </div>
 
-          {/* 🔥 PRIORITY (NEW) */}
+          {/* Priority */}
           <div>
             <p className="text-sm text-gray-500">Priority</p>
             {isEditing ? (
@@ -281,7 +300,12 @@ export default function SampleOrderDetail() {
             <div>
               <p className="text-sm text-gray-500 mb-2">Graphic File image</p>
               {isEditing ? (
-                <input type="file" name="graphicFile" onChange={handleChange} />
+                <input
+                  type="file"
+                  name="graphicFile"
+                  onChange={handleChange}
+                  accept=".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx,.xls,.xlsx,.csv" // ✅ NEW
+                />
               ) : (
                 renderFilePreview(order.graphicFile)
               )}
@@ -290,7 +314,12 @@ export default function SampleOrderDetail() {
             <div>
               <p className="text-sm text-gray-500 mb-2">Pattern File image</p>
               {isEditing ? (
-                <input type="file" name="patternFile" onChange={handleChange} />
+                <input
+                  type="file"
+                  name="patternFile"
+                  onChange={handleChange}
+                  accept=".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx,.xls,.xlsx,.csv" // ✅ NEW
+                />
               ) : (
                 renderFilePreview(order.patternFile)
               )}
@@ -299,7 +328,12 @@ export default function SampleOrderDetail() {
             <div>
               <p className="text-sm text-gray-500 mb-2">Tech Pack Document</p>
               {isEditing ? (
-                <input type="file" name="techPackFile" onChange={handleChange} />
+                <input
+                  type="file"
+                  name="techPackFile"
+                  onChange={handleChange}
+                  accept=".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx,.xls,.xlsx,.csv" // ✅ NEW
+                />
               ) : (
                 renderFilePreview(order.techPackFile)
               )}
